@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import configparser as configparser
 import sys
 import os
@@ -100,7 +101,7 @@ def main():
     url = '%sdomains/%s/records/%s/A' % (config.get(section, 'api'), config.get(section, 'domain'), config.get(section, 'a_name'))
     print(url)
     #Discover External IP
-    retries = config.get(section, 'retries', fallback=DEFAULT_RETRIES)
+    retries = int(config.get(section, 'retries', fallback=DEFAULT_RETRIES))
     external_ip = get_ip(retries)
     print(('External IP is: %s' % external_ip))
 
@@ -116,7 +117,9 @@ def main():
         print('No change in IP address. Goodbye.')
         continue
     else:
-      print('No existing record. Adding...')
+      print('No existing record.')
+      print('  status_code=%d, text="%s"' % (record.status_code, record.text))
+      print('Adding...')
 
     update_record(url, headers, payload)
 
